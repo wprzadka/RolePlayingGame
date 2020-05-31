@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace TheRPG
 {
-    public partial class Form1 : Form
+    public partial class Game : Form
     {
-        public Form1()
+        public Game()
         {
             InitializeComponent();
         }
@@ -26,6 +26,7 @@ namespace TheRPG
 
         private void DrawGraph(object sender, PaintEventArgs e)
         {
+            e.Graphics.FillEllipse(Brushes.Blue, new Rectangle(0, 0, 100, 100));
             e.Graphics.DrawEllipse(Pens.Black, new Rectangle(0, 0, 100, 100));
         }
 
