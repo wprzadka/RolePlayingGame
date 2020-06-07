@@ -33,10 +33,12 @@ namespace TheRPG
     }
     public partial class Game : Form
     {
-        private MapGraph locationsGraph = new MapGraph();
+        private MapGraph locationsGraph;
 
         public Game()
         {
+            locationsGraph = new MapGraph();
+            locationsGraph.root.addNeighbour(new Location(200, 100));
             InitializeComponent();
         }
 
@@ -49,16 +51,28 @@ namespace TheRPG
 
         private void DrawGraph(object sender, PaintEventArgs e)
         {
-
             Location iter = locationsGraph.root;
-            int diameter = 100;
-            do{
-                Rectangle box = new Rectangle(iter.x, iter.y, iter.x + diameter, iter.y + diameter);
+            int[] currPos = {iter.x, iter.y};
+            int diameter = 40;
+            bool runFlag = true;
 
-                e.Graphics.FillEllipse(Brushes.Blue, box);
+            while (runFlag)
+            {
+                Rectangle box = new Rectangle(iter.x - currPos[0] + Width/2, iter.y - currPos[0] + Height/2, diameter, diameter);
+
+                e.Graphics.FillEllipse(Brushes.AliceBlue, box);
                 e.Graphics.DrawEllipse(Pens.Black, box);
 
-            }while(iter.neighbour.Count > 0);
+                // TODO implement move over the visible part of graph and draw locations
+                if(iter.neighbour.Count > 0)
+                {
+                    iter = iter.neighbour[0];
+                }
+                else
+                {
+                    runFlag = false;
+                }
+            };
             
         }
 
