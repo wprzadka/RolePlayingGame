@@ -10,8 +10,31 @@ using System.Windows.Forms;
 
 namespace TheRPG
 {
+    public class Location{
+
+        public int x;
+        public int y;
+        public List<Location> neighbour;
+
+        public Location(int x, int y){
+            this.x = x;
+            this.y = y;
+            neighbour = new List<Location>();
+        }
+
+        public void addNeighbour(Location location){
+            neighbour.Add(location);
+        }
+    }
+
+    public class MapGraph{
+
+        public Location root = new Location(0, 0);
+    }
     public partial class Game : Form
     {
+        private MapGraph locationsGraph = new MapGraph();
+
         public Game()
         {
             InitializeComponent();
@@ -26,8 +49,17 @@ namespace TheRPG
 
         private void DrawGraph(object sender, PaintEventArgs e)
         {
-            e.Graphics.FillEllipse(Brushes.Blue, new Rectangle(0, 0, 100, 100));
-            e.Graphics.DrawEllipse(Pens.Black, new Rectangle(0, 0, 100, 100));
+
+            Location iter = locationsGraph.root;
+            int diameter = 100;
+            do{
+                Rectangle box = new Rectangle(iter.x, iter.y, iter.x + diameter, iter.y + diameter);
+
+                e.Graphics.FillEllipse(Brushes.Blue, box);
+                e.Graphics.DrawEllipse(Pens.Black, box);
+
+            }while(iter.neighbour.Count > 0);
+            
         }
 
         private void clock_Tick(object sender, EventArgs e)

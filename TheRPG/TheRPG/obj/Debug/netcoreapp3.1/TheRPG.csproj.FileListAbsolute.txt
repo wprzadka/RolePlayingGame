@@ -5,7 +5,6 @@ D:\programing stuff\source\TheRPG\TheRPG\TheRPG\bin\Debug\netcoreapp3.1\TheRPG.r
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\bin\Debug\netcoreapp3.1\TheRPG.dll
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\bin\Debug\netcoreapp3.1\TheRPG.pdb
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.csprojAssemblyReference.cache
-D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.Form1.resources
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.csproj.GenerateResource.cache
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.AssemblyInfoInputs.cache
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.AssemblyInfo.cs
@@ -13,3 +12,4 @@ D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.c
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.dll
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.pdb
 D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.genruntimeconfig.cache
+D:\programing stuff\source\TheRPG\TheRPG\TheRPG\obj\Debug\netcoreapp3.1\TheRPG.Location.resources
