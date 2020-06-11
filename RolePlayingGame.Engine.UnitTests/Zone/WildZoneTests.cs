@@ -30,7 +30,7 @@ namespace RolePlayingGame.Engine.UnitTests.Zone
                 npc2
             };
 
-            var zone = new WildZone("my zone", "some description", zoneActions, enemiesList);
+            var zone = new WildZone("my zone", "some description", new System.Tuple<int, int>(0, 0), zoneActions, enemiesList);
 
             zone.Actions.Should().HaveCount(3);
             zone.Actions.Should().ContainEquivalentOf(zoneAction);
@@ -41,7 +41,7 @@ namespace RolePlayingGame.Engine.UnitTests.Zone
         [Fact]
         public void Constructor_CreatesCorrectWildZone()
         {
-            var zone = new WildZone("forest", "some description", new List<IAction> { Substitute.For<IAction>() },
+            var zone = new WildZone("forest", "some description", new System.Tuple<int, int>(0, 0), new List<IAction> { Substitute.For<IAction>() },
                 new List<IKillable> { Substitute.For<IKillable>() });
 
             zone.Name.Should().Be("forest");
