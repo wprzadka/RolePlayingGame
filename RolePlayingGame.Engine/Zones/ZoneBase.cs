@@ -10,9 +10,11 @@ namespace RolePlayingGame.Engine.Zones
         private readonly IEnumerable<IAction> _baseActions;
         private readonly Lazy<IList<IAction>> _lazyActions;
 
-        protected ZoneBase(string name, string description, IEnumerable<IAction> actions)
+        protected ZoneBase(string name, string description, Tuple<int, int> pos, IEnumerable<IAction> actions)
         {
             Name = name;
+            Position = pos;
+
             Description = description;
             _baseActions = actions;
 
@@ -22,6 +24,9 @@ namespace RolePlayingGame.Engine.Zones
         protected abstract IEnumerable<IAction> AdditionalActions { get; }
 
         public string Name { get; }
+
+        public Tuple<int, int> Position { get; }
+
         public string Description { get; }
 
         public IList<IAction> Actions => _lazyActions.Value;
