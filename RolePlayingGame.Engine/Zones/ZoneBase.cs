@@ -18,6 +18,8 @@ namespace RolePlayingGame.Engine.Zones
             Description = description;
             _baseActions = actions;
 
+            Neighbours = new List<IZone>();
+
             _lazyActions = new Lazy<IList<IAction>>(ConcatenateActions);
         }
 
@@ -25,9 +27,12 @@ namespace RolePlayingGame.Engine.Zones
 
         public string Name { get; }
 
-        public Tuple<int, int> Position { get; }
 
         public string Description { get; }
+
+        public Tuple<int, int> Position { get; }
+
+        public IList<IZone> Neighbours { get; set; }
 
         public IList<IAction> Actions => _lazyActions.Value;
 

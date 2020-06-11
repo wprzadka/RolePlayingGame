@@ -21,9 +21,9 @@ namespace TheRPG
         public Game()
         {
             root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), new List<INonPlayerCharacter>());
-            //root.addNeighbour(new TownZone(200, 100, "Forest"));
-            //root.addNeighbour(new TownZone(-200, 200, "Tawern"));
-            //root.addNeighbour(new TownZone(40, -100, "Smith"));
+
+            root.Neighbours.Add(new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()));
+            root.Neighbours.Add(new TownZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>()));
 
             InitializeComponent();
         }
@@ -39,10 +39,10 @@ namespace TheRPG
         {
             List<IZone> paths = new List<IZone>();
             paths.Add(root);
-            //foreach(IZone v in root.neighbour)
-            //{
-            //    paths.Add(v);
-            //}
+            foreach(IZone v in root.Neighbours)
+            {
+                paths.Add(v);
+            }
 
             int[] currPos = {root.Position.Item1, root.Position.Item2};
             int diameter = 40;

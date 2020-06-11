@@ -11,5 +11,7 @@ namespace RolePlayingGame.Engine.Zones
         Tuple<int, int> Position { get; }
 
         IList<IAction> Actions { get; }
+
+        IList<IZone> Neighbours { get; set; }
     }
 }
