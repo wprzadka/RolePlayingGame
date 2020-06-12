@@ -37,7 +37,7 @@ namespace RolePlayingGame.Engine.UnitTests.Zone
                 npc2
             };
 
-            var zone = new TownZone("my zone", "some description", zoneActions, npcList);
+            var zone = new TownZone("my zone", "some description", new System.Tuple<int, int>(0, 0), zoneActions, npcList);
 
             zone.Actions.Should().HaveCount(6);
             zone.Actions.Should().ContainEquivalentOf(zoneAction);
@@ -51,7 +51,7 @@ namespace RolePlayingGame.Engine.UnitTests.Zone
         [Fact]
         public void Constructor_CreatesCorrectTownZone()
         {
-            var zone = new TownZone("my town", "some description", new List<IAction> {Substitute.For<IAction>()},
+            var zone = new TownZone("my town", "some description", new System.Tuple<int, int>(0, 0), new List<IAction> {Substitute.For<IAction>()},
                 new List<INonPlayerCharacter> {Substitute.For<INonPlayerCharacter>()});
 
             zone.Name.Should().Be("my town");

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RolePlayingGame.Engine.Actions;
 using RolePlayingGame.Engine.Characters.NonPlayer;
@@ -9,7 +10,7 @@ namespace RolePlayingGame.Engine.Zones
     {
         private readonly IEnumerable<IKillable> _enemies;
 
-        public WildZone(string name, string description, IEnumerable<IAction> actions, IEnumerable<IKillable> enemies) : base(name, description, actions)
+        public WildZone(string name, string description, Tuple<int, int> pos, IEnumerable<IAction> actions, IEnumerable<IKillable> enemies) : base(name, description, pos, actions)
         {
             _enemies = enemies;
         }
