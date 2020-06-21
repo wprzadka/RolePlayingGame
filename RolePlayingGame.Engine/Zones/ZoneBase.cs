@@ -35,6 +35,9 @@ namespace RolePlayingGame.Engine.Zones
         {
             Neighbours.Add(location);
             Actions.Add(new TravelAction(location));
+
+            location.Neighbours.Add(this);
+            location.Actions.Add(new TravelAction(this));
         }
 
         public IList<IAction> Actions => _lazyActions.Value;
