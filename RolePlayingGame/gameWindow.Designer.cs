@@ -48,7 +48,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "Game";
             this.Text = "RolePlaingGame";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.GameWindow_Load);
             this.ResumeLayout(false);
 
         }

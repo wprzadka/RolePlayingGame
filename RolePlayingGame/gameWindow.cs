@@ -9,8 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RolePlayingGame.Engine.Zones;
 using RolePlayingGame.Engine.Actions;
+using RolePlayingGame.Engine.Actions.Interactions;
 using RolePlayingGame.Engine.Characters.NonPlayer;
 using System.Diagnostics;
+using RolePlayingGame.Engine.Items;
 
 namespace TheRPG
 {
@@ -21,7 +23,13 @@ namespace TheRPG
 
         public Game()
         {
-            root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), new List<INonPlayerCharacter>());
+            List<INonPlayerCharacter> npc = new List<INonPlayerCharacter>();
+            List<IAction> conversation = new List<IAction>();
+            conversation.Add(new ConversationAction("talk with master", "Hello!"));
+            npc.Add(new NonPlayerCharacter("Master", 100, 0, 0, 0, 0, new Equipment(), conversation));
+            npc.Add(new NonPlayerCharacter("Rabit", 10, 0, 0, 0, 0, new Equipment(), new List<IAction>()));
+
+            root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
 
             root.AddNeighbour(new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()));
             root.AddNeighbour(new TownZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>()));
@@ -29,7 +37,7 @@ namespace TheRPG
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void GameWindow_Load(object sender, EventArgs e)
         {
             this.DoubleBuffered = true;
 
