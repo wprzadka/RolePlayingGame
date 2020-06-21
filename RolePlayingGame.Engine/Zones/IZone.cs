@@ -13,5 +13,7 @@ namespace RolePlayingGame.Engine.Zones
         IList<IAction> Actions { get; }
 
         IList<IZone> Neighbours { get; set; }
+
+        void AddNeighbour(IZone location);
     }
 }

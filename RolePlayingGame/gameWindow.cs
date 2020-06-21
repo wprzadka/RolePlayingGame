@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using RolePlayingGame.Engine.Zones;
 using RolePlayingGame.Engine.Actions;
 using RolePlayingGame.Engine.Characters.NonPlayer;
+using System.Diagnostics;
 
 namespace TheRPG
 {
@@ -22,8 +23,8 @@ namespace TheRPG
         {
             root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), new List<INonPlayerCharacter>());
 
-            root.Neighbours.Add(new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()));
-            root.Neighbours.Add(new TownZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>()));
+            root.AddNeighbour(new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()));
+            root.AddNeighbour(new TownZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>()));
 
             InitializeComponent();
         }
@@ -63,12 +64,22 @@ namespace TheRPG
                 e.Graphics.DrawEllipse(liner, box);
             }
 
-            TextFormatFlags textFlags = TextFormatFlags.Bottom | TextFormatFlags.EndEllipsis;
+            TextFormatFlags textFlags = TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis;
 
             foreach (IZone iter in paths)
             {
                 TextRenderer.DrawText(e.Graphics, iter.Name, DefaultFont, 
                     new Rectangle(iter.Position.Item1 - currPos[0] + Width / 2 + diameter, iter.Position.Item2 - currPos[1] + Height / 2 - diameter, 200, 40), Color.White, textFlags);
+            }
+
+            int shiftPos = 1;
+            foreach (IAction iter in root.Actions)
+            {
+                Rectangle rec = new Rectangle(40, shiftPos * 40, 200, 40);
+
+                TextRenderer.DrawText(e.Graphics, iter.Name, DefaultFont, rec, Color.White, textFlags);
+                e.Graphics.DrawRectangle(liner, rec);
+                ++shiftPos;
             }
         }
 

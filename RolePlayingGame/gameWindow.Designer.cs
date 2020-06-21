@@ -38,15 +38,16 @@
             this.clock.Interval = 15;
             this.clock.Tick += new System.EventHandler(this.clock_Tick);
             // 
-            // Form1
+            // Game
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(914, 600);
             this.DoubleBuffered = true;
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Name = "Game";
+            this.Text = "RolePlaingGame";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
