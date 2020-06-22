@@ -25,7 +25,6 @@ namespace TheRPG
     public partial class Game : Form
     {
         private GameState currentState;
-        private string currMsg;
 
         public Game()
         {
@@ -34,7 +33,7 @@ namespace TheRPG
             List<IAction> conversation = new List<IAction>();
             conversation.Add(new ConversationAction("talk with master", "Hello!"));
             npc.Add(new NonPlayerCharacter("Master", 100, 100, 999, 0, 0, new Equipment(), conversation));
-            npc.Add(new NonPlayerCharacter("Rabit", 10, 1, 0, 0, 0, new Equipment(), new List<IAction>()));
+            npc.Add(new NonPlayerCharacter("Rabbit", 10, 1, 0, 0, 0, new Equipment(), new List<IAction>()));
 
             TownZone root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
 
@@ -63,14 +62,12 @@ namespace TheRPG
                 act.Text = iter.Name;
                 act.Name = iter.Name;
 
-                string msg;
                 IList<IAction> actions;
                 act.Click += new EventHandler((object sender, EventArgs e) =>
                     {
                         try
                         {
-                            (msg, actions) = iter.Execute(currentState);
-                            currMsg = msg;
+                            (currentState.Message, actions) = iter.Execute(currentState);
                             loadEventsList();
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
@@ -88,8 +85,8 @@ namespace TheRPG
             this.DoubleBuffered = true;
 
             this.Paint += new PaintEventHandler(DrawGraph);
-            this.Paint += new PaintEventHandler((object sender, PaintEventArgs e) => TextRenderer.DrawText(e.Graphics, currMsg, DefaultFont, 
-                new Rectangle(60, Height / 2, 200, 400), Color.White, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis));
+            this.Paint += new PaintEventHandler((object sender, PaintEventArgs e) => TextRenderer.DrawText(e.Graphics, currentState.Message, DefaultFont, 
+                new Rectangle(60, Height / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis));
         }
 
         private void DrawGraph(object sender, PaintEventArgs e)
