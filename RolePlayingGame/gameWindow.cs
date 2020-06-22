@@ -45,14 +45,14 @@ namespace TheRPG
 
             InitializeComponent();
 
-            loadEventsList();
+            loadEventsList(currentState.Zone.Actions);
         }
 
-        private void loadEventsList()
+        private void loadEventsList(IList<IAction> actionsList)
         {
             Controls.Clear();
             int shiftPos = 1;
-            foreach (IAction iter in currentState.Zone.Actions)
+            foreach (IAction iter in actionsList)
             {
                 Button act = new Button();
                 act.Width = 200;
@@ -62,13 +62,13 @@ namespace TheRPG
                 act.Text = iter.Name;
                 act.Name = iter.Name;
 
-                IList<IAction> actions;
+                IList<IAction> newActions;
                 act.Click += new EventHandler((object sender, EventArgs e) =>
                     {
                         try
                         {
-                            (currentState.Message, actions) = iter.Execute(currentState);
-                            loadEventsList();
+                            (currentState.Message, newActions) = iter.Execute(currentState);
+                            loadEventsList(newActions);
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
                         {
