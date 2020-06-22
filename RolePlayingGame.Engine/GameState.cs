@@ -12,7 +12,7 @@ namespace RolePlayingGame.Engine
             Zone = zone;
             Dice = dice;
             FightLogic = fightLogic;
-            Message = "...";
+            Message = "The game has sterted.";
         }
 
         public IPlayerCharacter PlayerCharacter { get; }
