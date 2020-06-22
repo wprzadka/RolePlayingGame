@@ -25,8 +25,7 @@ namespace TheRPG
     public partial class Game : Form
     {
         private GameState currentState;
-        //private ZoneBase root;
-        //private List<Button> controlPanel;
+        private string currMsg;
 
         public Game()
         {
@@ -71,10 +70,7 @@ namespace TheRPG
                         try
                         {
                             (msg, actions) = iter.Execute(currentState);
-                            if(!(iter is TravelAction))
-                            {
-                                MessageBox.Show(msg);
-                            }
+                            currMsg = msg;
                             loadEventsList();
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
@@ -92,6 +88,8 @@ namespace TheRPG
             this.DoubleBuffered = true;
 
             this.Paint += new PaintEventHandler(DrawGraph);
+            this.Paint += new PaintEventHandler((object sender, PaintEventArgs e) => TextRenderer.DrawText(e.Graphics, currMsg, DefaultFont, 
+                new Rectangle(60, Height / 2, 200, 400), Color.White, TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis));
         }
 
         private void DrawGraph(object sender, PaintEventArgs e)
