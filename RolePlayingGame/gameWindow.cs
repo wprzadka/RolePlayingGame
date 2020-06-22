@@ -36,9 +36,19 @@ namespace TheRPG
             npc.Add(new NonPlayerCharacter("Rabbit", 10, 1, 0, 0, 0, new Equipment(), new List<IAction>()));
 
             TownZone root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
+            ZoneBase temp;
 
-            root.AddNeighbour(new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()));
-            root.AddNeighbour(new TownZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>()));
+            temp = new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>());
+            root.Neighbours.Add(temp);
+            root.Actions.Add(new TravelAction(temp));
+            temp.Neighbours.Add(root);
+            temp.Actions.Add(new TravelAction(root));
+
+            temp = new TownZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>());
+            root.Neighbours.Add(temp);
+            root.Actions.Add(new TravelAction(temp));
+            temp.Neighbours.Add(root);
+            temp.Actions.Add(new TravelAction(root));
 
             PlayerCharacter player = new Warrior("Player", new Equipment());
             currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
@@ -77,7 +87,6 @@ namespace TheRPG
                             //EndGameAction end = new EndGameAction();
                             //(currentState.Message, newActions) = end.Execute(currentState);
                             MessageBox.Show("Game Over");
-
                         }
                     }
                 );

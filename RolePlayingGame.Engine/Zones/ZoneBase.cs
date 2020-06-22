@@ -31,15 +31,6 @@ namespace RolePlayingGame.Engine.Zones
 
         public IList<IZone> Neighbours { get; set; } = new List<IZone>();
 
-        public void AddNeighbour(IZone location)
-        {
-            Neighbours.Add(location);
-            Actions.Add(new TravelAction(location));
-
-            location.Neighbours.Add(this);
-            location.Actions.Add(new TravelAction(this));
-        }
-
         public IList<IAction> Actions => _lazyActions.Value;
 
         private IList<IAction> ConcatenateActions()
