@@ -61,6 +61,8 @@ namespace TheRPG
                 ++shiftPos;
                 act.Text = iter.Name;
                 act.Name = iter.Name;
+                act.BackColor = Color.AliceBlue;
+                act.ForeColor = Color.DarkSlateGray;
 
                 IList<IAction> newActions;
                 act.Click += new EventHandler((object sender, EventArgs e) =>
@@ -72,7 +74,10 @@ namespace TheRPG
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
                         {
+                            //EndGameAction end = new EndGameAction();
+                            //(currentState.Message, newActions) = end.Execute(currentState);
                             MessageBox.Show("Game Over");
+
                         }
                     }
                 );
