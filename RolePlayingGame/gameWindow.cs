@@ -60,25 +60,26 @@ namespace TheRPG
         {
             Controls.Clear();
             int shiftPos = 1;
-            foreach (IAction iter in actionsList)
+            foreach (var action in actionsList)
             {
-                Button act = new Button();
-                act.Width = 200;
-                act.Height = 40;
-                act.Location = new Point(80, 40 * shiftPos);
+                var act = new Button {
+                    Width = 200, 
+                    Height = 40, 
+                    Location = new Point(80, 40 * shiftPos), 
+                    Text = action.Name, 
+                    Name = action.Name, 
+                    BackColor = Color.AliceBlue, 
+                    ForeColor = Color.DarkSlateGray 
+                };
                 ++shiftPos;
-                act.Text = iter.Name;
-                act.Name = iter.Name;
-                act.BackColor = Color.AliceBlue;
-                act.ForeColor = Color.DarkSlateGray;
 
-                IList<IAction> newActions;
-                act.Click += new EventHandler((object sender, EventArgs e) =>
+                IList<IAction> newActionsList;
+                act.Click += new EventHandler((sender, e) =>
                     {
                         try
                         {
-                            (currentState.Message, newActions) = iter.Execute(currentState);
-                            loadEventsList(newActions);
+                            (currentState.Message, newActionsList) = action.Execute(currentState);
+                            loadEventsList(newActionsList);
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
                         {
@@ -97,14 +98,13 @@ namespace TheRPG
             this.DoubleBuffered = true;
 
             this.Paint += new PaintEventHandler(DrawGraph);
-            this.Paint += new PaintEventHandler((object sender, PaintEventArgs e) => TextRenderer.DrawText(e.Graphics, currentState.Message, DefaultFont, 
+            this.Paint += new PaintEventHandler((sender, e) => TextRenderer.DrawText(e.Graphics, currentState.Message, DefaultFont, 
                 new Rectangle(60, Height / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis));
         }
 
         private void DrawGraph(object sender, PaintEventArgs e)
         {
-            List<IZone> paths = new List<IZone>();
-            paths.Add(currentState.Zone);
+            List<IZone> paths = new List<IZone> { currentState.Zone };
             foreach(IZone v in currentState.Zone.Neighbours)
             {
                 paths.Add(v);
