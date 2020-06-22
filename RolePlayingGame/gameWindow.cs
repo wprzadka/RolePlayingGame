@@ -41,7 +41,7 @@ namespace TheRPG
             root.AddNeighbour(new TownZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>()));
 
             PlayerCharacter player = new Warrior("Player", new Equipment());
-            currentState = new GameState(player, root, new Dice(1), new FightLogic());
+            currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
 
             InitializeComponent();
 
