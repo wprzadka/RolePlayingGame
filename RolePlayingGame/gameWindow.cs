@@ -29,26 +29,24 @@ namespace TheRPG
         public Game()
         {
             // TODO implement auto generation of Zones
-            List<INonPlayerCharacter> npc = new List<INonPlayerCharacter>();
-            List<IAction> conversation = new List<IAction>();
-            conversation.Add(new ConversationAction("talk with master", "Hello!"));
-            npc.Add(new NonPlayerCharacter("Master", 100, 100, 999, 0, 0, new Equipment(), conversation));
-            npc.Add(new NonPlayerCharacter("Rabbit", 10, 1, 0, 0, 0, new Equipment(), new List<IAction>()));
+            var conversation = new List<IAction> { new ConversationAction("talk with master", "Hello!") };
+            var npc = new List<INonPlayerCharacter> { 
+                new NonPlayerCharacter("Master", 100, 100, 999, 0, 0, new Equipment(), conversation),
+                new NonPlayerCharacter("Rabbit", 10, 1, 0, 0, 0, new Equipment(), new List<IAction>())
+            };
 
-            TownZone root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
-            ZoneBase temp;
+            var root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
 
-            temp = new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>());
-            root.Neighbours.Add(temp);
-            root.Actions.Add(new TravelAction(temp));
-            temp.Neighbours.Add(root);
-            temp.Actions.Add(new TravelAction(root));
-
-            temp = new TownZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>());
-            root.Neighbours.Add(temp);
-            root.Actions.Add(new TravelAction(temp));
-            temp.Neighbours.Add(root);
-            temp.Actions.Add(new TravelAction(root));
+            var startLoction = new List<IZone>{ 
+                new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()),
+                new WildZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>())
+            };
+            foreach (IZone location in startLoction) {
+                root.Neighbours.Add(location);
+                root.Actions.Add(new TravelAction(location));
+                location.Neighbours.Add(root);
+                location.Actions.Add(new TravelAction(root));
+            }
 
             PlayerCharacter player = new Warrior("Player", new Equipment());
             currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
