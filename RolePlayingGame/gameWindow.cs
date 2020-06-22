@@ -17,6 +17,8 @@ using RolePlayingGame.Engine;
 using RolePlayingGame.Engine.Characters.Player;
 using RolePlayingGame.Engine.Characters.Player.Classes;
 using RolePlayingGame.Engine.Dices;
+using RolePlayingGame.Engine.Actions.Fight;
+
 namespace TheRPG
 {
 
@@ -32,8 +34,8 @@ namespace TheRPG
             List<INonPlayerCharacter> npc = new List<INonPlayerCharacter>();
             List<IAction> conversation = new List<IAction>();
             conversation.Add(new ConversationAction("talk with master", "Hello!"));
-            npc.Add(new NonPlayerCharacter("Master", 100, 0, 0, 0, 0, new Equipment(), conversation));
-            npc.Add(new NonPlayerCharacter("Rabit", 10, 0, 0, 0, 0, new Equipment(), new List<IAction>()));
+            npc.Add(new NonPlayerCharacter("Master", 100, 100, 999, 0, 0, new Equipment(), conversation));
+            npc.Add(new NonPlayerCharacter("Rabit", 10, 1, 0, 0, 0, new Equipment(), new List<IAction>()));
 
             TownZone root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
 
@@ -61,19 +63,26 @@ namespace TheRPG
                 ++shiftPos;
                 act.Text = iter.Name;
                 act.Name = iter.Name;
-                if (iter is TravelAction)
-                {
-                    act.Click += new EventHandler((object sender, EventArgs e) => 
+
+                string msg;
+                IList<IAction> actions;
+                act.Click += new EventHandler((object sender, EventArgs e) =>
+                    {
+                        try
                         {
-                            iter.Execute(currentState);
+                            (msg, actions) = iter.Execute(currentState);
+                            if(!(iter is TravelAction))
+                            {
+                                MessageBox.Show(msg);
+                            }
                             loadEventsList();
                         }
-                    );
-                }
-                else
-                {
-                    act.Click += new EventHandler((object sender, EventArgs e) => MessageBox.Show(iter.Name));
-                }
+                        catch (RolePlayingGame.Engine.Exceptions.EndGameException)
+                        {
+                            MessageBox.Show("Game Over");
+                        }
+                    }
+                );
                 Controls.Add(act);
             }
         }
