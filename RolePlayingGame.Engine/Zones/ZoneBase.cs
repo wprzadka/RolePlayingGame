@@ -25,7 +25,6 @@ namespace RolePlayingGame.Engine.Zones
 
         public string Name { get; }
 
-
         public string Description { get; }
 
         public Tuple<int, int> Position { get; }

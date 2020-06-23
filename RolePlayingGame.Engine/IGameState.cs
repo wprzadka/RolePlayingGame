@@ -14,5 +14,7 @@ namespace RolePlayingGame.Engine
         IDice Dice { get; }
 
         IFightLogic FightLogic { get; }
+
+        string Message { get; set; }
     }
 }

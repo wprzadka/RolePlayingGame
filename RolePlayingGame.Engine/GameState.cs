@@ -12,11 +12,14 @@ namespace RolePlayingGame.Engine
             Zone = zone;
             Dice = dice;
             FightLogic = fightLogic;
+            Message = "The game has sterted.";
         }
 
         public IPlayerCharacter PlayerCharacter { get; }
         public IZone Zone { get; set; }
         public IDice Dice { get; }
         public IFightLogic FightLogic { get; }
+
+        public string Message { get; set; }
     }
 }
