@@ -8,7 +8,6 @@ namespace RolePlayingGame.Engine.Zones
     public abstract class ZoneBase : IZone
     {
         private readonly IEnumerable<IAction> _baseActions;
-        private readonly Lazy<IList<IAction>> _lazyActions;
 
         protected ZoneBase(string name, string description, Tuple<int, int> pos, IEnumerable<IAction> actions)
         {
@@ -17,8 +16,6 @@ namespace RolePlayingGame.Engine.Zones
 
             Description = description;
             _baseActions = actions;
-
-            _lazyActions = new Lazy<IList<IAction>>(ConcatenateActions);
         }
 
         protected abstract IEnumerable<IAction> AdditionalActions { get; }
@@ -31,11 +28,16 @@ namespace RolePlayingGame.Engine.Zones
 
         public IList<IZone> Neighbours { get; set; } = new List<IZone>();
 
-        public IList<IAction> Actions => _lazyActions.Value;
-
-        private IList<IAction> ConcatenateActions()
+        public IList<IAction> Actions
         {
-            return _baseActions.Concat(AdditionalActions).ToList();
+            get
+            {
+                var allActions = _baseActions.ToList();
+                allActions.AddRange(AdditionalActions);
+                allActions.AddRange(Neighbours.Select(n => new TravelAction(n)));
+
+                return allActions;
+            }
         }
     }
 }

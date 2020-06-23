@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using RolePlayingGame.Engine.Zones;
 using RolePlayingGame.Engine.Actions;
 using RolePlayingGame.Engine.Actions.Interactions;
 using RolePlayingGame.Engine.Characters.NonPlayer;
-using System.Diagnostics;
 using RolePlayingGame.Engine.Items;
 using RolePlayingGame.Engine;
 using RolePlayingGame.Engine.Characters.Player;
 using RolePlayingGame.Engine.Characters.Player.Classes;
 using RolePlayingGame.Engine.Dices;
-using RolePlayingGame.Engine.Actions.Fight;
 
 namespace TheRPG
 {
 
     public partial class Game : Form
     {
-        private GameState currentState;
+        private readonly GameState _currentState;
 
         public Game()
         {
@@ -37,29 +30,28 @@ namespace TheRPG
 
             var root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
 
-            var startLoction = new List<IZone>{ 
+            var startLocation = new List<IZone>{ 
                 new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()),
                 new WildZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>())
             };
-            foreach (IZone location in startLoction) {
+
+            foreach (var location in startLocation) {
                 root.Neighbours.Add(location);
-                root.Actions.Add(new TravelAction(location));
                 location.Neighbours.Add(root);
-                location.Actions.Add(new TravelAction(root));
             }
 
             PlayerCharacter player = new Warrior("Player", new Equipment());
-            currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
+            _currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
 
             InitializeComponent();
 
-            loadEventsList(currentState.Zone.Actions);
+            LoadEventsList(_currentState.Zone.Actions);
         }
 
-        private void loadEventsList(IList<IAction> actionsList)
+        private void LoadEventsList(IEnumerable<IAction> actionsList)
         {
             Controls.Clear();
-            int shiftPos = 1;
+            var shiftPos = 1;
             foreach (var action in actionsList)
             {
                 var act = new Button {
@@ -74,67 +66,64 @@ namespace TheRPG
                 ++shiftPos;
 
                 IList<IAction> newActionsList;
-                act.Click += new EventHandler((sender, e) =>
+                act.Click += (sender, e) =>
+                {
+                    try
                     {
-                        try
-                        {
-                            (currentState.Message, newActionsList) = action.Execute(currentState);
-                            loadEventsList(newActionsList);
-                        }
-                        catch (RolePlayingGame.Engine.Exceptions.EndGameException)
-                        {
-                            //EndGameAction end = new EndGameAction();
-                            //(currentState.Message, newActions) = end.Execute(currentState);
-                            MessageBox.Show("Game Over");
-                        }
+                        (_currentState.Message, newActionsList) = action.Execute(_currentState);
+                        LoadEventsList(newActionsList);
                     }
-                );
+                    catch (RolePlayingGame.Engine.Exceptions.EndGameException)
+                    {
+                        //EndGameAction end = new EndGameAction();
+                        //(currentState.Message, newActions) = end.Execute(currentState);
+                        MessageBox.Show("Game Over");
+                    }
+                };
                 Controls.Add(act);
             }
         }
 
         private void GameWindow_Load(object sender, EventArgs e)
         {
-            this.DoubleBuffered = true;
+            DoubleBuffered = true;
 
-            this.Paint += new PaintEventHandler(DrawGraph);
-            this.Paint += new PaintEventHandler((sender, e) => TextRenderer.DrawText(e.Graphics, currentState.Message, DefaultFont, 
-                new Rectangle(60, Height / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis));
+            Paint += DrawGraph;
+            Paint += (sender, e) => TextRenderer.DrawText(e.Graphics, _currentState.Message, DefaultFont, 
+                new Rectangle(60, Height / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis);
         }
 
         private void DrawGraph(object sender, PaintEventArgs e)
         {
-            List<IZone> paths = new List<IZone> { currentState.Zone };
-            foreach(IZone v in currentState.Zone.Neighbours)
-            {
-                paths.Add(v);
-            }
+            var paths = new List<IZone> { _currentState.Zone };
+            paths.AddRange(_currentState.Zone.Neighbours);
 
-            int[] currPos = {currentState.Zone.Position.Item1, currentState.Zone.Position.Item2};
-            int diameter = 40;
-            Pen liner = new Pen(Color.Black, 6);
+            int[] currentPosition = {_currentState.Zone.Position.Item1, _currentState.Zone.Position.Item2};
+            const int diameter = 40;
+            var liner = new Pen(Color.Black, 6);
 
-            foreach(IZone iter in paths)
+            foreach(var zone in paths)
             {
                 e.Graphics.DrawLine(liner, 
                     new PointF((Width + diameter) / 2, (Height + diameter) / 2),
-                    new PointF(iter.Position.Item1 - currPos[0] + (Width + diameter) / 2, iter.Position.Item2 - currPos[1] + (Height + diameter) / 2));
+                    new PointF(zone.Position.Item1 - currentPosition[0] + (Width + diameter) / 2, zone.Position.Item2 - currentPosition[1] + (Height + diameter) / 2));
 
             }
-            foreach (IZone iter in paths)
+
+            foreach (var zone in paths)
             {
-                Rectangle box = new Rectangle(iter.Position.Item1 - currPos[0] + Width / 2, iter.Position.Item2 - currPos[1] + Height / 2, diameter, diameter);
+                var box = new Rectangle(zone.Position.Item1 - currentPosition[0] + Width / 2, zone.Position.Item2 - currentPosition[1] + Height / 2, diameter, diameter);
 
                 e.Graphics.FillEllipse(Brushes.AliceBlue, box);
                 e.Graphics.DrawEllipse(liner, box);
             }
 
-            TextFormatFlags textFlags = TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis;
+            const TextFormatFlags textFlags = TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis;
 
-            foreach (IZone iter in paths)
+            foreach (var zone in paths)
             {
-                TextRenderer.DrawText(e.Graphics, iter.Name, DefaultFont, 
-                    new Rectangle(iter.Position.Item1 - currPos[0] + Width / 2 + diameter, iter.Position.Item2 - currPos[1] + Height / 2 - diameter, 200, 40), Color.White, textFlags);
+                TextRenderer.DrawText(e.Graphics, zone.Name, DefaultFont, 
+                    new Rectangle(zone.Position.Item1 - currentPosition[0] + Width / 2 + diameter, zone.Position.Item2 - currentPosition[1] + Height / 2 - diameter, 200, 40), Color.White, textFlags);
             }
         }
 
