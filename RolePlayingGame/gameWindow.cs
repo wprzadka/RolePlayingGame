@@ -83,7 +83,10 @@ namespace TheRPG
         private void StartGame(IPlayerCharacter player)
         {
             // TODO implement auto generation of Zones
-            var conversation = new List<IAction> { new ConversationAction("talk with master", "Hello!") };
+            var conversation = new List<IAction> { new ConversationAction("From Narnia", "That's beautiful place") };
+            conversation = new List<IAction> { new ConversationAction("Who are you old man?", "Get out fool!"), new ConversationAction("Hello Master", "Where are you coming From?", conversation) };
+            conversation = new List<IAction> { new ConversationAction("talk with Master", "Hello!", conversation) };
+
             var npc = new List<INonPlayerCharacter> {
                 new NonPlayerCharacter("Master", 100, 100, 999, 0, 20, new Equipment(), conversation),
                 new NonPlayerCharacter("Rabbit", 100, 1, 0, 10, 50, new Equipment(), new List<IAction>())

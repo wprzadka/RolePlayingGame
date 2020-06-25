@@ -19,7 +19,10 @@ namespace RolePlayingGame.Engine.Actions.Interactions
 
         public override (string result, IList<IAction> possibleActions) Execute(IGameState gameState)
         {
-            _responses.Add(new ConversationAction("Bye!", "Bye!", gameState.Zone.Actions));
+            if (_responses.Count < 1)
+            {
+                _responses.Add(new ConversationAction("Bye!", "Bye!", gameState.Zone.Actions));
+            }
             return (_result, _responses);
         }
     }
