@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 
 namespace RolePlayingGame.UserInterface
 {
-    class PlayerDetails : IPlayerDetails
+    interface IGameInterface
     {
+        void DrawUserInterface(object sender, PaintEventArgs e);
     }
 }

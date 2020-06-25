@@ -28,6 +28,7 @@ namespace TheRPG
     {
         private IGameState currentState;
         private IMainMenu mainMenu;
+        private IGameInterface gameInterface;
 
         public Game()
         {
@@ -107,10 +108,11 @@ namespace TheRPG
             }
 
             currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
+            gameInterface = new GameInterface(currentState, Width, Height, DefaultFont);
 
-            this.Paint += new PaintEventHandler(DrawGraph);
-            this.Paint += new PaintEventHandler((sender, e) => TextRenderer.DrawText(e.Graphics, currentState.Message, DefaultFont,
-                new Rectangle(60, Height / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis));
+            Paint += new PaintEventHandler(DrawGraph);
+            Paint += new PaintEventHandler(gameInterface.DrawUserInterface);
+
             loadEventsList(currentState.Zone.Actions);
         }
 
