@@ -60,7 +60,8 @@ namespace TheRPG
                         try
                         {
                             (msg, newActionsList) = action.Execute(_currentState);
-                            _currentState.Message = msg + "\n" + _currentState.Message;
+                            var len = (_currentState.Message.Length < 300 ? _currentState.Message.Length : 300);
+                            _currentState.Message = msg + "\n" + _currentState.Message.Substring(0, len);
                             LoadEventsList(newActionsList);
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
