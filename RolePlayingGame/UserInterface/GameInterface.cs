@@ -27,7 +27,7 @@ namespace RolePlayingGame.UserInterface
         public void DrawUserInterface(object sender, PaintEventArgs e)
         {
             TextRenderer.DrawText(e.Graphics, _gameState.Message, _font,
-                new Rectangle(60, _windowHeight / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis);
+                new Rectangle(60, _windowHeight / 2, 400, _windowHeight / 2 - 80), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis);
 
             // hp line params
             var hpBar = new Rectangle(_windowWidth * 7 / 10, _windowHeight / 20, 160, 40);

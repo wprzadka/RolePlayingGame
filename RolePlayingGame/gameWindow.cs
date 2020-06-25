@@ -53,12 +53,14 @@ namespace TheRPG
                 };
                 ++shiftPos;
 
+                string msg;
                 IList<IAction> newActionsList;
                 act.Click += new EventHandler((sender, e) =>
                     {
                         try
                         {
-                            (_currentState.Message, newActionsList) = action.Execute(_currentState);
+                            (msg, newActionsList) = action.Execute(_currentState);
+                            _currentState.Message = msg + "\n" + _currentState.Message;
                             LoadEventsList(newActionsList);
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
