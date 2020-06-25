@@ -12,6 +12,7 @@ using RolePlayingGame.Engine.Actions;
 using RolePlayingGame.Engine.Actions.Interactions;
 using RolePlayingGame.Engine.Characters.NonPlayer;
 using System.Diagnostics;
+using System.Reflection.Metadata;
 using RolePlayingGame.Engine.Items;
 using RolePlayingGame.Engine;
 using RolePlayingGame.Engine.Characters.Player;
@@ -30,37 +31,9 @@ namespace TheRPG
 
         public Game()
         {
-            // TODO implement auto generation of Zones
-            var conversation = new List<IAction> { new ConversationAction("talk with master", "Hello!") };
-            var npc = new List<INonPlayerCharacter> { 
-                new NonPlayerCharacter("Master", 100, 100, 999, 0, 20, new Equipment(), conversation),
-                new NonPlayerCharacter("Rabbit", 100, 1, 0, 10, 50, new Equipment(), new List<IAction>())
-            };
-
-            var root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
-
-            var monsters = new List<IKillable> {
-                new NonPlayerCharacter("Bear", 100, 30, 40, 200, 20, new Equipment(), conversation),
-                new NonPlayerCharacter("Wolf", 100, 20, 5, 100, 30, new Equipment(), new List<IAction>())
-            };
-
-            var startLoction = new List<IZone>{ 
-                new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()),
-                new WildZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), monsters)
-            };
-            foreach (IZone location in startLoction) {
-                root.Neighbours.Add(location);
-                root.Actions.Add(new TravelAction(location));
-                location.Neighbours.Add(root);
-                location.Actions.Add(new TravelAction(root));
-            }
-
-            PlayerCharacter player = new Warrior("Player", new Equipment());
-            currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
-
 
             InitializeComponent();
-            menu = new MainMenu(Controls, Width, Height, startGame);
+            menu = new MainMenu(Controls, Width, Height, ChoseClass);
         }
 
         private void loadEventsList(IList<IAction> actionsList)
@@ -106,14 +79,82 @@ namespace TheRPG
             menu.loadScreen();
         }
 
-        private void startGame()
+        private void ChoseClass()
         {
+            var classNames = new List<string>
+            {
+                "Warrior", "None", "None"
+            };
+            var charactersTiles = new List<Button>();
+            var shiftPos = 1;
+            foreach (var name in classNames)
+            {
+                var newTile = new Button
+                {
+                    Width = Width / 3 - Width / 8,
+                    Height = Height - Height / 4,
+                    Location = new Point(Width / 4 * shiftPos - Width / 8, Height / 20),
+                    Text = name,
+                    Name = name,
+                    BackColor = Color.AliceBlue,
+                    ForeColor = Color.DarkSlateGray
+                };
+                ++shiftPos;
+                charactersTiles.Add(newTile);
+            }
+            var characters = new List<PlayerCharacter>
+            {
+                new Warrior("player", new Equipment()),
+                new Warrior("none", new Equipment()),
+                new Warrior("none", new Equipment())
+            };
+
+            foreach (var (character ,button) in characters.Zip(charactersTiles))
+            {
+                button.Click += new EventHandler((e, sender) => startGame(character));
+            }
+            Controls.Clear();
+            foreach (var button in charactersTiles)
+            {
+                Controls.Add(button);
+            }
+        }
+
+        private void startGame(IPlayerCharacter player)
+        {
+            // TODO implement auto generation of Zones
+            var conversation = new List<IAction> { new ConversationAction("talk with master", "Hello!") };
+            var npc = new List<INonPlayerCharacter> {
+                new NonPlayerCharacter("Master", 100, 100, 999, 0, 20, new Equipment(), conversation),
+                new NonPlayerCharacter("Rabbit", 100, 1, 0, 10, 50, new Equipment(), new List<IAction>())
+            };
+
+            var root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
+
+            var monsters = new List<IKillable> {
+                new NonPlayerCharacter("Bear", 100, 30, 40, 200, 20, new Equipment(), conversation),
+                new NonPlayerCharacter("Wolf", 100, 20, 5, 100, 30, new Equipment(), new List<IAction>())
+            };
+
+            var startLoction = new List<IZone>{
+                new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()),
+                new WildZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), monsters)
+            };
+            foreach (IZone location in startLoction)
+            {
+                root.Neighbours.Add(location);
+                root.Actions.Add(new TravelAction(location));
+                location.Neighbours.Add(root);
+                location.Actions.Add(new TravelAction(root));
+            }
+
+            currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
+
             this.Paint += new PaintEventHandler(DrawGraph);
             this.Paint += new PaintEventHandler((sender, e) => TextRenderer.DrawText(e.Graphics, currentState.Message, DefaultFont,
                 new Rectangle(60, Height / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis));
             loadEventsList(currentState.Zone.Actions);
         }
-
 
         private void DrawGraph(object sender, PaintEventArgs e)
         {
