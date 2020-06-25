@@ -53,12 +53,15 @@ namespace TheRPG
                 };
                 ++shiftPos;
 
+                string msg;
                 IList<IAction> newActionsList;
                 act.Click += new EventHandler((sender, e) =>
                     {
                         try
                         {
-                            (_currentState.Message, newActionsList) = action.Execute(_currentState);
+                            (msg, newActionsList) = action.Execute(_currentState);
+                            var len = (_currentState.Message.Length < 300 ? _currentState.Message.Length : 300);
+                            _currentState.Message = msg + "\n" + _currentState.Message.Substring(0, len);
                             LoadEventsList(newActionsList);
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
@@ -83,7 +86,10 @@ namespace TheRPG
         private void StartGame(IPlayerCharacter player)
         {
             // TODO implement auto generation of Zones
-            var conversation = new List<IAction> { new ConversationAction("talk with master", "Hello!") };
+            var conversation = new List<IAction> { new ConversationAction("From Narnia", "That's beautiful place") };
+            conversation = new List<IAction> { new ConversationAction("Who are you old man?", "Get out fool!"), new ConversationAction("Hello Master", "Where are you coming From?", conversation) };
+            conversation = new List<IAction> { new ConversationAction("talk with Master", "Hello!", conversation) };
+
             var npc = new List<INonPlayerCharacter> {
                 new NonPlayerCharacter("Master", 100, 100, 999, 0, 20, new Equipment(), conversation),
                 new NonPlayerCharacter("Rabbit", 100, 1, 0, 10, 50, new Equipment(), new List<IAction>())
