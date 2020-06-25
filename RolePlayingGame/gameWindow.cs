@@ -27,13 +27,12 @@ namespace TheRPG
     public partial class Game : Form
     {
         private IGameState currentState;
-        private IMainMenu menu;
+        private IMainMenu mainMenu;
 
         public Game()
         {
-
             InitializeComponent();
-            menu = new MainMenu(Controls, Width, Height, ChoseClass);
+            mainMenu = new MainMenu(Controls, Width, Height, ChoseClass);
         }
 
         private void loadEventsList(IList<IAction> actionsList)
@@ -76,14 +75,14 @@ namespace TheRPG
         private void GameWindow_Load(object sender, EventArgs e)
         {
             this.DoubleBuffered = true;
-            menu.loadScreen();
+            mainMenu.loadScreen();
         }
 
         private void ChoseClass()
         {
             var classNames = new List<string>
             {
-                "Warrior", "None", "None"
+                "Warrior", "Archer", "Mage"
             };
             var charactersTiles = new List<Button>();
             var shiftPos = 1;
@@ -105,8 +104,8 @@ namespace TheRPG
             var characters = new List<PlayerCharacter>
             {
                 new Warrior("player", new Equipment()),
-                new Warrior("none", new Equipment()),
-                new Warrior("none", new Equipment())
+                new Archer("player", new Equipment()),
+                new Mage("player", new Equipment())
             };
 
             foreach (var (character ,button) in characters.Zip(charactersTiles))
