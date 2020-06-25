@@ -12,7 +12,7 @@ namespace RolePlayingGame.Engine
             Zone = zone;
             Dice = dice;
             FightLogic = fightLogic;
-            Message = "Welcome "+ playerCharacter.Name +"!\nThe game has sterted.";
+            Message = "Welcome "+ playerCharacter.Name +"!\nThe game has started.";
         }
 
         public IPlayerCharacter PlayerCharacter { get; }

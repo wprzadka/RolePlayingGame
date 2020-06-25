@@ -33,7 +33,7 @@ namespace TheRPG
         public Game()
         {
             InitializeComponent();
-            _mainMenu = new MainMenu(Controls, Width, Height, StartGame);
+            _mainMenu = new MainMenu(Controls, Width, Height, StartGame, Close);
         }
 
         private void LoadEventsList(IList<IAction> actionsList)
