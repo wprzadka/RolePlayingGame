@@ -18,28 +18,35 @@ using RolePlayingGame.Engine.Characters.Player;
 using RolePlayingGame.Engine.Characters.Player.Classes;
 using RolePlayingGame.Engine.Dices;
 using RolePlayingGame.Engine.Actions.Fight;
+using RolePlayingGame.UserInterface;
 
 namespace TheRPG
 {
 
     public partial class Game : Form
     {
-        private GameState currentState;
+        private IGameState currentState;
+        private IMainMenu menu;
 
         public Game()
         {
             // TODO implement auto generation of Zones
             var conversation = new List<IAction> { new ConversationAction("talk with master", "Hello!") };
             var npc = new List<INonPlayerCharacter> { 
-                new NonPlayerCharacter("Master", 100, 100, 999, 0, 0, new Equipment(), conversation),
-                new NonPlayerCharacter("Rabbit", 10, 1, 0, 0, 0, new Equipment(), new List<IAction>())
+                new NonPlayerCharacter("Master", 100, 100, 999, 0, 20, new Equipment(), conversation),
+                new NonPlayerCharacter("Rabbit", 100, 1, 0, 10, 50, new Equipment(), new List<IAction>())
             };
 
             var root = new TownZone("Hideout", "Hideout", new Tuple<int, int>(0, 0), new List<IAction>(), npc);
 
+            var monsters = new List<IKillable> {
+                new NonPlayerCharacter("Bear", 100, 30, 40, 200, 20, new Equipment(), conversation),
+                new NonPlayerCharacter("Wolf", 100, 20, 5, 100, 30, new Equipment(), new List<IAction>())
+            };
+
             var startLoction = new List<IZone>{ 
                 new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()),
-                new WildZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), new List<INonPlayerCharacter>())
+                new WildZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), monsters)
             };
             foreach (IZone location in startLoction) {
                 root.Neighbours.Add(location);
@@ -51,9 +58,9 @@ namespace TheRPG
             PlayerCharacter player = new Warrior("Player", new Equipment());
             currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
 
-            InitializeComponent();
 
-            loadEventsList(currentState.Zone.Actions);
+            InitializeComponent();
+            menu = new MainMenu(Controls, Width, Height, startGame);
         }
 
         private void loadEventsList(IList<IAction> actionsList)
@@ -96,11 +103,17 @@ namespace TheRPG
         private void GameWindow_Load(object sender, EventArgs e)
         {
             this.DoubleBuffered = true;
-
-            this.Paint += new PaintEventHandler(DrawGraph);
-            this.Paint += new PaintEventHandler((sender, e) => TextRenderer.DrawText(e.Graphics, currentState.Message, DefaultFont, 
-                new Rectangle(60, Height / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis));
+            menu.loadScreen();
         }
+
+        private void startGame()
+        {
+            this.Paint += new PaintEventHandler(DrawGraph);
+            this.Paint += new PaintEventHandler((sender, e) => TextRenderer.DrawText(e.Graphics, currentState.Message, DefaultFont,
+                new Rectangle(60, Height / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis));
+            loadEventsList(currentState.Zone.Actions);
+        }
+
 
         private void DrawGraph(object sender, PaintEventArgs e)
         {
