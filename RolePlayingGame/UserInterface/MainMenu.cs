@@ -51,7 +51,15 @@ namespace RolePlayingGame.UserInterface
                 BackColor = Color.DarkSlateGray,
                 ForeColor = Color.AliceBlue
             };
-            acceptButton.Click += new EventHandler((e, sender) => ChoseClass(textBox.Text));
+            acceptButton.Click += new EventHandler((e, sender) =>
+            {
+                var name = textBox.Text;
+                if (name.Length < 1)
+                {
+                    name = "Player";
+                }
+                ChoseClass(name);
+            });
 
             _controls.Clear();
             _controls.Add(textBox);
