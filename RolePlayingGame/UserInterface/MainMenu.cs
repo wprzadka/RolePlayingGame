@@ -18,18 +18,21 @@ namespace RolePlayingGame.UserInterface
         
         private readonly int _windowHeight;
 
-        private readonly Action<IPlayerCharacter> _startGameFunction; 
-        
+        private readonly Action<IPlayerCharacter> _startGameFunction;
+
+        private readonly Action _closeFunction;
+
         private IList<Button> _buttons;
 
         private Control.ControlCollection _controls;
 
-        public MainMenu(Control.ControlCollection controls, int width, int height, Action<IPlayerCharacter> startGameFunc)
+        public MainMenu(Control.ControlCollection controls, int width, int height, Action<IPlayerCharacter> startGameFunc, Action close)
         {
             _controls = controls;
             _windowWith = width;
             _windowHeight = height;
             _startGameFunction = startGameFunc;
+            _closeFunction = close;
         }
 
         private void ChoseName()
@@ -121,19 +124,27 @@ namespace RolePlayingGame.UserInterface
                 {
                     Width = _windowWith / 2,
                     Height = _windowHeight / 7,
-                    Location = new System.Drawing.Point(_windowWith / 4, _windowHeight / 6 * shiftPos),
+                    Location = new Point(_windowWith / 4, _windowHeight / 6 * shiftPos),
                     Text = name,
                     Name = name,
-                    BackColor = System.Drawing.Color.DarkSlateGray,
-                    ForeColor = System.Drawing.Color.AliceBlue
+                    BackColor = Color.DarkSlateGray,
+                    ForeColor = Color.AliceBlue
                 });
                 ++shiftPos;
             }
 
-            foreach (var button in _buttons)
+            var actionsList = new List<EventHandler>
             {
-                button.Click += new EventHandler((sender, e) => ChoseName());
+                new EventHandler((sender, e) => ChoseName()),
+                new EventHandler((sender, e) => MessageBox.Show(@"Available coming soon")),
+                new EventHandler((sender, e) => MessageBox.Show(@"Available coming soon")),
+                new EventHandler((sender, e) => _closeFunction())
+            };
+            foreach (var (action, button) in actionsList.Zip(_buttons))
+            {
+                button.Click += action;
             }
+
             _controls.Clear();
             foreach (var button in _buttons)
             {
