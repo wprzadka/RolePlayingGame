@@ -30,35 +30,35 @@ namespace RolePlayingGame.UserInterface
             _windowWith = width;
             _windowHeight = height;
             _startGameFunction = startGameFunc;
-
-            var buttonsNames = new List<string>
-            {
-                "New game", "-", "-", "Exit"
-            };
-            _buttons = new List<Button>();
-            var shiftPos = 1;
-            foreach (var name in buttonsNames)
-            {
-                _buttons.Add(new Button
-                {
-                    Width = _windowWith / 2,
-                    Height = _windowHeight / 7,
-                    Location = new System.Drawing.Point(_windowWith / 4, _windowHeight / 6 * shiftPos),
-                    Text = name,
-                    Name = name,
-                    BackColor = System.Drawing.Color.DarkSlateGray,
-                    ForeColor = System.Drawing.Color.AliceBlue
-                });
-                ++shiftPos;
-            }
-
-            foreach (var button in _buttons)
-            {
-                button.Click += new EventHandler((sender, e) => ChoseClass());
-            }
         }
 
-        private void ChoseClass()
+        private void ChoseName()
+        {
+            var textBox = new TextBox
+            {
+                Width = _windowWith / 2,
+                Height = 180,
+                Location = new Point(_windowWith / 4, _windowHeight / 4),
+                PlaceholderText = @"Name"
+            };
+            var acceptButton = new Button
+            {
+                Width = 80,
+                Height = 60,
+                Location = new Point(_windowWith * 3 / 4, _windowHeight / 4 + 200),
+                Text = @"Ok",
+                Name = "Ok",
+                BackColor = Color.DarkSlateGray,
+                ForeColor = Color.AliceBlue
+            };
+            acceptButton.Click += new EventHandler((e, sender) => ChoseClass(textBox.Text));
+
+            _controls.Clear();
+            _controls.Add(textBox);
+            _controls.Add(acceptButton);
+        }
+
+        private void ChoseClass(string playerName)
         {
             var classNames = new List<string>
             {
@@ -83,9 +83,9 @@ namespace RolePlayingGame.UserInterface
             }
             var characters = new List<PlayerCharacter>
             {
-                new Warrior("player", new Equipment()),
-                new Archer("player", new Equipment()),
-                new Mage("player", new Equipment())
+                new Warrior(playerName, new Equipment()),
+                new Archer(playerName, new Equipment()),
+                new Mage(playerName, new Equipment())
             };
 
             foreach (var (character, button) in characters.Zip(charactersTiles))
@@ -101,6 +101,31 @@ namespace RolePlayingGame.UserInterface
 
         public void loadScreen()
         {
+            var buttonsNames = new List<string>
+            {
+                "New game", "-", "-", "Exit"
+            };
+            _buttons = new List<Button>();
+            var shiftPos = 1;
+            foreach (var name in buttonsNames)
+            {
+                _buttons.Add(new Button
+                {
+                    Width = _windowWith / 2,
+                    Height = _windowHeight / 7,
+                    Location = new System.Drawing.Point(_windowWith / 4, _windowHeight / 6 * shiftPos),
+                    Text = name,
+                    Name = name,
+                    BackColor = System.Drawing.Color.DarkSlateGray,
+                    ForeColor = System.Drawing.Color.AliceBlue
+                });
+                ++shiftPos;
+            }
+
+            foreach (var button in _buttons)
+            {
+                button.Click += new EventHandler((sender, e) => ChoseName());
+            }
             _controls.Clear();
             foreach (var button in _buttons)
             {
