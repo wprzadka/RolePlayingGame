@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace RolePlayingGame.UserInterface
 {
-    interface IGameInterface
+    public interface IGameInterface
     {
         void DrawUserInterface(object sender, PaintEventArgs e);
     }

@@ -12,7 +12,7 @@ using RolePlayingGame.Engine.Items;
 
 namespace RolePlayingGame.UserInterface
 {
-    class MainMenu : IMainMenu
+    public class MainMenu : IMainMenu
     {
         private readonly int _windowWith;
         
@@ -107,7 +107,7 @@ namespace RolePlayingGame.UserInterface
             }
         }
 
-        public void loadScreen()
+        public void LoadScreen()
         {
             var buttonsNames = new List<string>
             {

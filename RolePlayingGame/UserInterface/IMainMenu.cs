@@ -8,8 +8,6 @@ namespace RolePlayingGame.UserInterface
 {
     public interface IMainMenu
     {
-        //Control.ControlCollection Controls { get; }
-
-        void loadScreen();
+        void LoadScreen();
     }
 }

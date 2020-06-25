@@ -26,17 +26,17 @@ namespace TheRPG
 
     public partial class Game : Form
     {
-        private IGameState currentState;
-        private IMainMenu mainMenu;
-        private IGameInterface gameInterface;
+        private IGameState _currentState;
+        private readonly IMainMenu _mainMenu;
+        private IGameInterface _gameInterface;
 
         public Game()
         {
             InitializeComponent();
-            mainMenu = new MainMenu(Controls, Width, Height, startGame);
+            _mainMenu = new MainMenu(Controls, Width, Height, StartGame);
         }
 
-        private void loadEventsList(IList<IAction> actionsList)
+        private void LoadEventsList(IList<IAction> actionsList)
         {
             Controls.Clear();
             int shiftPos = 1;
@@ -58,14 +58,15 @@ namespace TheRPG
                     {
                         try
                         {
-                            (currentState.Message, newActionsList) = action.Execute(currentState);
-                            loadEventsList(newActionsList);
+                            (_currentState.Message, newActionsList) = action.Execute(_currentState);
+                            LoadEventsList(newActionsList);
                         }
                         catch (RolePlayingGame.Engine.Exceptions.EndGameException)
                         {
                             //EndGameAction end = new EndGameAction();
                             //(currentState.Message, newActions) = end.Execute(currentState);
-                            MessageBox.Show("Game Over");
+                            MessageBox.Show(@"Game Over");
+                            Close();
                         }
                     }
                 );
@@ -76,10 +77,10 @@ namespace TheRPG
         private void GameWindow_Load(object sender, EventArgs e)
         {
             this.DoubleBuffered = true;
-            mainMenu.loadScreen();
+            _mainMenu.LoadScreen();
         }
 
-        private void startGame(IPlayerCharacter player)
+        private void StartGame(IPlayerCharacter player)
         {
             // TODO implement auto generation of Zones
             var conversation = new List<IAction> { new ConversationAction("talk with master", "Hello!") };
@@ -99,7 +100,7 @@ namespace TheRPG
                 new TownZone("Smith", "Smith", new Tuple<int, int>(100, -50), new List<IAction>(), new List<INonPlayerCharacter>()),
                 new WildZone("Forest", "Forest", new Tuple<int, int>(20, 140), new List<IAction>(), monsters)
             };
-            foreach (IZone location in startLoction)
+            foreach (var location in startLoction)
             {
                 root.Neighbours.Add(location);
                 root.Actions.Add(new TravelAction(location));
@@ -107,48 +108,48 @@ namespace TheRPG
                 location.Actions.Add(new TravelAction(root));
             }
 
-            currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
-            gameInterface = new GameInterface(currentState, Width, Height, DefaultFont);
+            _currentState = new GameState(player, root, new Dice(DateTime.Now.Second), new FightLogic());
+            _gameInterface = new GameInterface(_currentState, Width, Height, DefaultFont);
 
             Paint += new PaintEventHandler(DrawGraph);
-            Paint += new PaintEventHandler(gameInterface.DrawUserInterface);
+            Paint += new PaintEventHandler(_gameInterface.DrawUserInterface);
 
-            loadEventsList(currentState.Zone.Actions);
+            LoadEventsList(_currentState.Zone.Actions);
         }
 
         private void DrawGraph(object sender, PaintEventArgs e)
         {
-            List<IZone> paths = new List<IZone> { currentState.Zone };
-            foreach(IZone v in currentState.Zone.Neighbours)
+            var paths = new List<IZone> { _currentState.Zone };
+            foreach(var v in _currentState.Zone.Neighbours)
             {
                 paths.Add(v);
             }
 
-            int[] currPos = {currentState.Zone.Position.Item1, currentState.Zone.Position.Item2};
-            int diameter = 40;
-            Pen liner = new Pen(Color.Black, 6);
+            int[] currPos = {_currentState.Zone.Position.Item1, _currentState.Zone.Position.Item2};
+            const int diameter = 40;
+            var liner = new Pen(Color.Black, 6);
 
-            foreach(IZone iter in paths)
+            foreach(var location in paths)
             {
                 e.Graphics.DrawLine(liner, 
                     new PointF((Width + diameter) / 2, (Height + diameter) / 2),
-                    new PointF(iter.Position.Item1 - currPos[0] + (Width + diameter) / 2, iter.Position.Item2 - currPos[1] + (Height + diameter) / 2));
+                    new PointF(location.Position.Item1 - currPos[0] + (Width + diameter) / 2, location.Position.Item2 - currPos[1] + (Height + diameter) / 2));
 
             }
-            foreach (IZone iter in paths)
+            foreach (var location in paths)
             {
-                Rectangle box = new Rectangle(iter.Position.Item1 - currPos[0] + Width / 2, iter.Position.Item2 - currPos[1] + Height / 2, diameter, diameter);
+                var box = new Rectangle(location.Position.Item1 - currPos[0] + Width / 2, location.Position.Item2 - currPos[1] + Height / 2, diameter, diameter);
 
                 e.Graphics.FillEllipse(Brushes.AliceBlue, box);
                 e.Graphics.DrawEllipse(liner, box);
             }
 
-            TextFormatFlags textFlags = TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis;
+            const TextFormatFlags textFlags = TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis;
 
-            foreach (IZone iter in paths)
+            foreach (var location in paths)
             {
-                TextRenderer.DrawText(e.Graphics, iter.Name, DefaultFont, 
-                    new Rectangle(iter.Position.Item1 - currPos[0] + Width / 2 + diameter, iter.Position.Item2 - currPos[1] + Height / 2 - diameter, 200, 40), Color.White, textFlags);
+                TextRenderer.DrawText(e.Graphics, location.Name, DefaultFont, 
+                    new Rectangle(location.Position.Item1 - currPos[0] + Width / 2 + diameter, location.Position.Item2 - currPos[1] + Height / 2 - diameter, 200, 40), Color.White, textFlags);
             }
         }
 

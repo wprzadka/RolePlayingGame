@@ -8,7 +8,7 @@ using RolePlayingGame.Engine;
 
 namespace RolePlayingGame.UserInterface
 {
-    class GameInterface : IGameInterface
+    public class GameInterface : IGameInterface
     {
         private readonly IGameState _gameState;
 
@@ -30,10 +30,10 @@ namespace RolePlayingGame.UserInterface
                 new Rectangle(60, _windowHeight / 2, 400, 400), Color.White, TextFormatFlags.Top | TextFormatFlags.EndEllipsis);
 
             var hpBar = new Rectangle(_windowWidth * 7 / 10, _windowHeight / 20, 160, 40);
-            float healthState = _gameState.PlayerCharacter.Health / (float)_gameState.PlayerCharacter.MaxHealth;
+            var healthState = _gameState.PlayerCharacter.Health / (float)_gameState.PlayerCharacter.MaxHealth;
             e.Graphics.FillRectangle(new SolidBrush(Color.LimeGreen), new Rectangle(_windowWidth * 7 / 10, _windowHeight / 20, (int)(160 * healthState), 40));
             e.Graphics.DrawRectangle(new Pen(Color.Black, 6), hpBar);
-            TextRenderer.DrawText(e.Graphics, ((int)(healthState * 100)).ToString() + "%", _font, hpBar, Color.White, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            TextRenderer.DrawText(e.Graphics, ((int)(healthState * 100)).ToString() + "%", _font, hpBar, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
         }
     }
 }
