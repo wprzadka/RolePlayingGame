@@ -21,6 +21,7 @@ namespace RolePlayingGame.Engine.Actions.Fight
             if (gameState.FightLogic.PlayerAttacksAndEnemyDies(_enemy, gameState.PlayerCharacter, message))
             {
                 gameState.PlayerCharacter.Experience += _enemy.ExperienceGain;
+                gameState.Zone.RemoveKilledActivities(this);
                 return (message.ToString(), gameState.Zone.Actions);
             }
 

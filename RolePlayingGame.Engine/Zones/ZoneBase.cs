@@ -37,5 +37,10 @@ namespace RolePlayingGame.Engine.Zones
         {
             return _baseActions.Concat(AdditionalActions).ToList();
         }
+
+        public void RemoveKilledActivities(IAction action)
+        {
+            _lazyActions.Value.Remove(action);
+        }
     }
 }
