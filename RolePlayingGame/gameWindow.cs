@@ -32,7 +32,7 @@ namespace TheRPG
         public Game()
         {
             InitializeComponent();
-            mainMenu = new MainMenu(Controls, Width, Height, ChoseClass);
+            mainMenu = new MainMenu(Controls, Width, Height, startGame);
         }
 
         private void loadEventsList(IList<IAction> actionsList)
@@ -76,47 +76,6 @@ namespace TheRPG
         {
             this.DoubleBuffered = true;
             mainMenu.loadScreen();
-        }
-
-        private void ChoseClass()
-        {
-            var classNames = new List<string>
-            {
-                "Warrior", "Archer", "Mage"
-            };
-            var charactersTiles = new List<Button>();
-            var shiftPos = 1;
-            foreach (var name in classNames)
-            {
-                var newTile = new Button
-                {
-                    Width = Width / 3 - Width / 8,
-                    Height = Height - Height / 4,
-                    Location = new Point(Width / 4 * shiftPos - Width / 8, Height / 20),
-                    Text = name,
-                    Name = name,
-                    BackColor = Color.AliceBlue,
-                    ForeColor = Color.DarkSlateGray
-                };
-                ++shiftPos;
-                charactersTiles.Add(newTile);
-            }
-            var characters = new List<PlayerCharacter>
-            {
-                new Warrior("player", new Equipment()),
-                new Archer("player", new Equipment()),
-                new Mage("player", new Equipment())
-            };
-
-            foreach (var (character ,button) in characters.Zip(charactersTiles))
-            {
-                button.Click += new EventHandler((e, sender) => startGame(character));
-            }
-            Controls.Clear();
-            foreach (var button in charactersTiles)
-            {
-                Controls.Add(button);
-            }
         }
 
         private void startGame(IPlayerCharacter player)

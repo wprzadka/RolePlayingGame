@@ -8,9 +8,7 @@ namespace RolePlayingGame.UserInterface
 {
     public interface IMainMenu
     {
-        Control.ControlCollection Controls { get; }
-
-        //PaintEventHandler Paint { get; }
+        //Control.ControlCollection Controls { get; }
 
         void loadScreen();
     }
