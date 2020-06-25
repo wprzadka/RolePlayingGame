@@ -6,10 +6,12 @@ namespace RolePlayingGame.Engine.Characters.Player.Classes
     {
         public Mage(string name, IEquipment equipment) : base(name, equipment)
         {
+            _healthPerLvl = 3;
+            _damagePerLvl = 7;
         }
 
-        public override int Health { get; protected set; } = 150;
-        public override int MaxHealth { get; } = 150;
+        public override int Health { get; protected set; } = 153;
+        public override int BaseHealth { get; } = 150;
         protected override int BaseArmor { get; } = 1;
         protected override int BaseDamage { get; } = 40;
 

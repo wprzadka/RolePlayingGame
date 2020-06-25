@@ -32,17 +32,28 @@ namespace RolePlayingGame.UserInterface
             // hp line params
             var hpBar = new Rectangle(_windowWidth * 7 / 10, _windowHeight / 20, 160, 40);
             var healthState = _gameState.PlayerCharacter.Health / (float)_gameState.PlayerCharacter.MaxHealth;
+
             // draw hp line
             e.Graphics.FillRectangle(new SolidBrush(Color.LimeGreen), new Rectangle(_windowWidth * 7 / 10, _windowHeight / 20, (int)(160 * healthState), 40));
             e.Graphics.DrawRectangle(new Pen(Color.Black, 6), hpBar);
-            TextRenderer.DrawText(e.Graphics, ((int)(healthState * 100)).ToString() + "%", _font, hpBar, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+            TextRenderer.DrawText(e.Graphics, ((int)(healthState * 100)).ToString() + "%", _font, 
+                hpBar, Color.Black, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+           
+            // draw player level
+            var level = _gameState.PlayerCharacter.Level;
+            TextRenderer.DrawText(e.Graphics, "level " + level.ToString(), _font,
+                new Rectangle(_windowWidth * 6 / 10, _windowHeight / 20, 60, 40),
+                Color.Gold, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
+
             // draw current experience
             var exp = _gameState.PlayerCharacter.Experience;
             TextRenderer.DrawText(e.Graphics, exp.ToString() + " exp", _font,
                 new Rectangle(_windowWidth * 8 / 10, _windowHeight / 20 + 60, 100, 30), 
                 Color.Gold, TextFormatFlags.Left | TextFormatFlags.Top);
 
+            // draw player stats
             var stats = "Hp: " + _gameState.PlayerCharacter.Health.ToString() + 
+                        "/" + _gameState.PlayerCharacter.MaxHealth.ToString() +
                         "\nArmor: " + _gameState.PlayerCharacter.Armor.ToString() + 
                         "\nDamage: " + _gameState.PlayerCharacter.Damage.ToString();
             TextRenderer.DrawText(e.Graphics, stats, _font,
